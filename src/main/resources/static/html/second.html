@@ -1,0 +1,22 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+  $('a').click(function() {
+     var url=$(this).attr('href');
+     $('#myspace').load(url + ' #myDiv');
+     return false;
+  }); //end click
+			
+}); // end ready
+</script>
+</head>
+<body>
+<div id='myDiv'>
+<h1>Second</h1>
+<a href='first.html'>First</a>
+<div id='myspace'></div>
+</div>
+</body>
+</html>

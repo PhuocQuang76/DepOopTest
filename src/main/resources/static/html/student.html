@@ -1,0 +1,177 @@
+
+
+<html>
+<head>
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script>
+	$(document).ready(function () {
+
+		$.get('/getStudents', function (responseText) {
+
+			 $.each(responseText, function (key, value) {
+				$("#tbl").append("<tr><td>" + value.id + "</td><td>" + value.name + "</td><td>" + value.age + "</td></tr>");
+
+			});
+		});
+
+		$("#showStudents").click(function () {
+
+			var id = $("#sid").val();
+			var name = $("#sname").val();
+			var age = $("#sage").val();
+			
+			var student = {"id":id,"name":name,"age":age};
+			//remove the old data on the table ,accept the title of the table
+			$("#tbl tr:not(:first)").remove();
+			//use ajax call
+			$.ajax({
+				//POST is send data
+				type: "POST",
+				contentType: "application/json",
+				//using this url to send the data
+				url: "http://localhost:8281/postStudent",
+				//convert object to json type
+				data: JSON.stringify(student),
+				dataType: "json",
+				
+				//call back, when success get the result 
+				success: function (result) {
+					
+					$.each(result, function (key, value) {
+						$("#tbl").append(
+							"<tr>"+
+								"<td>" + value.id + "</td>"+
+								"<td>" + value.name + "</td>"+
+								"<td>" + value.age + "</td>"+
+							"</tr>"
+							);
+					});
+				},
+				error: function (e) {
+
+				}
+			});
+
+		}); // end post
+
+	}); // end ready
+</script>
+
+</head>
+
+<body>
+<h1>Student Page</h1>
+<table id="postTbl">
+		<tr>
+			<td>ID</td>
+			<td><input type="text" id="sid"/></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" id="sname" /></td>
+		</tr>
+		<tr>
+			<td>Age</td>
+			<td><input type="text" id="sage" /></td>
+		</tr>
+	</table>
+
+
+	<input type="button" value="Post" id="showStudents" />
+	
+	<h1>Student Table</h1>
+	
+	<table id="tbl">
+		<tr>
+			<td>ID</td>
+			<td>Name</td>
+			<td>Age</td>
+		</tr>
+	</table>
+</body>
+</html>
+<!--
+
+<html>
+<head>
+	<script src="../js/jquery-1.7.2.min.js"></script>
+		
+	<script>
+	$(document).ready(function () {
+
+		$.get("/getStudents", function (responseText) {
+
+			 $.each(responseText, function (key, value) {
+				$("#tbl").append("<tr><td>" + value.id + "</td><td>" + value.name + "</td><td>" + value.age + "</td></tr>");
+
+			});
+		});
+
+		$("#postStudent").click(function () {
+
+			var id = $("#sid").val();
+			var name = $("#sname").val();
+			var age = $("#sage").val();
+			
+			var student = {"id":id,"name":name,"age":age};
+			
+			$("#tbl tr:not(:first)").remove();
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				url: "http://localhost:8281/postStudent",
+				data: JSON.stringify(student),
+				dataType: "json",
+				success: function (result) {
+					
+					$.each(result, function (key, value) {
+						$("#tbl").append("<tr><td>" + value.id + "</td><td>" + value.name + "</td><td>" + value.age + "</td></tr>");
+					});
+				},
+				error: function (e) {
+
+				}
+			});
+
+		}); // end post
+
+	}); // end ready
+</script>
+
+
+		
+	</head>
+	
+	
+	<body>
+		<h1>Student Page</h1>
+		<table id="postTbl">
+		<tr>
+			<td>ID</td>
+			<td><input type="text" id="sid"/></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" id="sname" /></td>
+		</tr>
+		<tr>
+			<td>Age</td>
+			<td><input type="text" id="sage" /></td>
+		</tr>
+	</table>
+		
+	<input type="button" value="Post" id="showStudents" />
+	
+	<h1>Student Table</h1>
+	
+	<table id="tbl">
+		<tr>
+			<td>ID</td>
+			<td>Name</td>
+			<td>Age</td>
+		</tr>
+	</table>
+	</body>
+	</html>
+	-->
+	

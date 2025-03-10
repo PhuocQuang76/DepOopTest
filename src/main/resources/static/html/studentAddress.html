@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Student</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	
+	<script>
+		$(document).ready(function(){
+			$.get('/getStudents', function (responseText) {
+
+				 $.each(responseText, function (key, value) {
+					$("#tbl").append(
+						"<tr>"+
+							"<td>" + value.id + "</td>"+
+							"<td>" + value.name + "</td>"+
+							"<td>" + value.age + "</td>"+
+							"<td><a href='#' class='remove'>Remove Record</a></td>" +
+	                        "<td><a href='#' class='show'>View Addres</a></td>" +
+						"</tr>");
+	
+				});
+			});
+			
+			
+			$("#postFullStudents").click(function () {
+
+				var id = $("#sid").val();
+				var name = $("#sname").val();
+				var age = $("#sage").val();
+				var age = $("#shouseNo").val();
+				var age = $("#scity").val();
+				var age = $("#sprovince").val();
+				var age = $("#scountry").val();
+				var age = $("#sphoneNo").val();
+				
+				var student = {"id":id,"name":name,"age":age,"houseNo":houseNo,"city":city,
+				"province":province,"country":country,"phoneNo":phoneNo, 
+					address: {
+						houseNo: $("#houseNo").val(),
+						province: $("#province").val(),
+						country: $("#country").val(),
+						phoneNo: $("#sphoneNo").val()
+					}
+				};
+			
+				$("#tbl tr:not(:first)").remove();
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "http://localhost:8281/postFullStudent",
+					data: JSON.stringify(student),
+					dataType: "json",
+					success: function (result) {
+						
+						$.each(result, function (key, value) {
+							$("#tbl").append(
+								"<tr>"+
+									"<td>" + value.id + "</td>"+
+									"<td>" + value.name + "</td>"+
+									"<td>" + value.age + "</td>"+
+									"<td><a href='#' class='remove'>Remove Record</a></td>" +
+	                        		"<td><a href='#' class='show'>View Addres</a></td>" +
+								"</tr>");
+						});
+					},
+					error: function (e) {
+	
+					}
+				});
+
+			 }); // end post
+			 
+			 
+			 $.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "http://localhost:8281/postFullStudent",
+					data: JSON.stringify(student),
+					dataType: "json",
+					success: function (result) {
+						
+						$.each(result, function (key, value) {
+							$("#tbl").append(
+								"<tr>"+
+									"<td>" + value.id + "</td>"+
+									"<td>" + value.name + "</td>"+
+									"<td>" + value.age + "</td>"+
+									"<td><a href='#' class='remove'>Remove Record</a></td>" +
+	                        		"<td><a href='#' class='show'>View Addres</a></td>" +
+								"</tr>");
+								
+								
+							$("#address").append(
+								"<tr>"+
+									"<td>" + value.id + "</td>"+
+									"<td>" + value.name + "</td>"+
+									"<td>" + value.age + "</td>"+
+									"<td><a href='#' class='remove'>Remove Record</a></td>" +
+	                        		"<td><a href='#' class='show'>View Address</a></td>" +
+								"</tr>");
+							);
+						});
+					},
+					error: function (e) {
+	
+					}
+				});
+
+			 }); // end post
+			
+			
+			
+			
+		
+		}); //end ready
+	</script>
+
+	<h1>Student Adding Form</h1>
+		<table id="postTbl">
+		<tr>
+			<td>ID</td>
+			<td><input type="text" id="sid"/></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" id="sname" /></td>
+		</tr>
+		<tr>
+			<td>Age</td>
+			<td><input type="text" id="sage" /></td>
+		</tr>
+		<tr>
+			<td>HouseNo</td>
+			<td><input type="text" id="shouseNo" /></td>
+		</tr>
+		<tr>
+			<td>City</td>
+			<td><input type="text" id="scity" /></td>
+		</tr>
+		<tr>
+			<td>Province</td>
+			<td><input type="text" id="sprovince" /></td>
+		</tr>
+		<tr>
+			<td>Country</td>
+			<td><input type="text" id="scountry" /></td>
+		</tr>
+		<tr>
+			<td>PhoneNo</td>
+			<td><input type="text" id="sphoneNo" /></td>
+		</tr>
+	</table>
+		
+	<input type="button" value="Post" id="postFullStudents" />
+
+
+	<div>
+	    <h1>Student List</h1>
+	    <table id='tbl' border='1'>
+	        <tr>
+	            <th>FName</th>
+	            <th>LName</th>
+	            <th>Age</th>
+	            <th>Remove</th>
+	            <th>Show Address</th>
+	        </tr>
+	    </table>
+	</div>
+
+	<div>
+	    <br>
+	    <h1>Address</h1>
+	    <table id='address' border='1'>
+	        <tr>
+	            <td>HouseNo</td>
+	            <td><input type='text' id="houseNo"/></td>
+	        </tr>
+	        <tr>
+	            <td>City</td>
+	            <td><input type='text' id="city"/></td>
+	        </tr>
+	        <tr>
+	            <td>Province</td>
+	            <td><input type='text' id="province"/></td>
+	        </tr>
+	        <tr>
+	            <td>Country</td>
+	            <td><input type='text' id="country"/></td>
+	        </tr>
+	        <tr>
+	            <td>PhoneNo</td>
+	            <td><input type='text' id="phoneNo"/></td>
+	        </tr>
+	
+	    </table>
+	</div>
+</body>
+</html>
