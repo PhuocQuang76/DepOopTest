@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>AileenSpringDemo1</artifactId>
+	<artifactId>AileenDepOopTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AileenDepOopTest</name>
 	<description>Demo project for Spring Boot</description>
@@ -44,7 +44,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>depoop-test-image</finalName>
+
 	</build>
 
 </project>
