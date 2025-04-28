@@ -1,7 +1,7 @@
 # Define the final stage using OpenJDK as the base image
 #The Dockerfile starts by defining a build stage using the openjdk:17-jdk-slim base image
 #where Maven is installed to build the application.
-FROM openjdk:17-jdk-slim as build
+FROM openjdk:17-jdk-slim
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven
@@ -11,16 +11,17 @@ WORKDIR /app
 
 # Copy the Maven project from the host to the container
 #copies the Maven project files from the host machine to the container's /app directory.
-COPY ./app /app
+COPY . /app
 
 # Build the Maven project
 #The Maven project is built using the mvn clean package -DskipTests command.
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Start a new stage using the base image without Maven
 #A new stage is started using the openjdk:17-jdk-slim base image without Maven to
 #reduce the final image size.
 FROM openjdk:17-jdk-slim
+# FROM openjdk:17-jdk
 
 WORKDIR /app
 
