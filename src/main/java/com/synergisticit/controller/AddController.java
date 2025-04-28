@@ -14,9 +14,9 @@ public class AddController {
         return request.getA() + request.getB();
     }
 
-    @GetMapping("/getNumber")
-    public int getNumber(){
-        return 0;
-    }
+//    @GetMapping("/getNumber")
+//    public int getNumber(){
+//        return 0;
+//    }
 
 }
