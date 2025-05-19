@@ -16,7 +16,7 @@ public class AddController {
 
     @GetMapping("/getNumber")
     public int getNumber(){
-        return 0;
+        return 10;
     }
 
 }
