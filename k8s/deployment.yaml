@@ -20,7 +20,7 @@ spec:
           image: quanghongphuoc/order-ms:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8088
+            - containerPort: 8281  # Changed from 8088 to 8281
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
@@ -34,13 +34,13 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 8088
+              port: 8281  # Changed from 8088 to 8281
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8088
+              port: 8281  # Changed from 8088 to 8281
             initialDelaySeconds: 30
             periodSeconds: 10
 ---
@@ -55,6 +55,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 8088  # Changed from 8080 to 8088 to match container port
+      targetPort: 8281  # Changed from 8088 to 8281
   selector:
     app: order-ms
