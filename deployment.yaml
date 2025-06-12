@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: order-ms-deployment
   namespace: order-ms
-  labels:
-    app: order-ms
 spec:
   replicas: 2
   selector:
@@ -18,43 +16,41 @@ spec:
       containers:
         - name: order-ms
           image: quanghongphuoc/order-ms:latest
-          imagePullPolicy: Always
           ports:
-            - containerPort: 8281  # Changed from 8088 to 8281
+            - containerPort: 8281
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
           resources:
             requests:
               cpu: "500m"
-              memory: "512Mi"
+              memory: "1Gi"
             limits:
               cpu: "1000m"
-              memory: "1024Mi"
+              memory: "2Gi"
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 8281  # Changed from 8088 to 8281
-            initialDelaySeconds: 60
+              port: 8281
+            initialDelaySeconds: 120
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8281  # Changed from 8088 to 8281
-            initialDelaySeconds: 30
+              port: 8281
+            initialDelaySeconds: 60
             periodSeconds: 10
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: order-ms-svc
   namespace: order-ms
-  labels:
-    app: order-ms
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 80
-      targetPort: 8281  # Changed from 8088 to 8281
+      targetPort: 8281
   selector:
     app: order-ms
