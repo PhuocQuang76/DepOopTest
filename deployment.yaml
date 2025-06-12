@@ -21,25 +21,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "1000m"
-              memory: "2Gi"
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8088  # Changed from 8281
-            initialDelaySeconds: 120
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8088  # Changed from 8281
-            initialDelaySeconds: 60
-            periodSeconds: 10
+
 
 ---
 apiVersion: v1
@@ -50,7 +32,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
-      targetPort: 8088  # Changed from 8281
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
   selector:
     app: order-ms
