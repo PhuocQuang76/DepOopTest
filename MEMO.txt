@@ -63,19 +63,7 @@
 
 
 * Add credential in jenkins
-    manage jenkins > credentials > system > Global credentials
-    add aws credentials
-        kind: secrete text
-        scope: global
-        secret:
-        ID: AWS_ACCESS_KEY_ID
-        -> Create
-    add aws credentials
-        kind: secrete text
-        scope: global
-        secret:
-        ID: AWS_SECRET_ACCESS_KEY
-        -> Create
+
 
 * If git repo is private
     Need to add crdentials also
