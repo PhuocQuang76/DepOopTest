@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: DepOopTest-svc
+  namespace: default
+spec:
+  type: loadBalancer
+  selector:
+    app: DepOopTest
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8088 # Changed from 8080 to 8088 to match container port

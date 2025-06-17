@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: DepOopTest-deployment
+  namespace: depooptest
+  labels:
+    app: DepOopTest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: DepOopTest
+  template:
+    metadata:
+      labels:
+        app: DepOopTest
+    spec:
+      containers:
+        - name: depooptest
+          image: quanghongphuoc/depooptest:latest
+          ports:
+            - containerPort: 8088

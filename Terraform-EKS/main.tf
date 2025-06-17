@@ -30,15 +30,23 @@ module "vpc" {
 }
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 19.0"  # Use a recent version of the module
 
-  cluster_name    = "my-eks-cluster"
-  cluster_version = "1.24"
+  cluster_name    = "depooptest-cluster"
+  cluster_version = "1.28"  # Updated to a supported version
 
   cluster_endpoint_public_access = true
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
+
+  # Update VPC tags to match your cluster name
+  tags = {
+    "kubernetes.io/cluster/depooptest-cluster" = "shared"
+    Environment = "dev"
+    Terraform   = "true"
+  }
 
   eks_managed_node_groups = {
     nodes = {
@@ -46,12 +54,8 @@ module "eks" {
       max_size     = 1
       desired_size = 1
 
-      instance_type = ["t2.medium"]
+      instance_types = ["t2.medium"]  # Changed to instance_types (plural)
+      capacity_type  = "ON_DEMAND"    # Explicitly set capacity type
     }
-  }
-
-  tags = {
-    Environment = "dev"
-    Terraform   = "true"
   }
 }
