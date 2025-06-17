@@ -35,7 +35,134 @@
 
 
 --------------------------------- EKS TERRAFORM -----------------------------------
---------------------------------------------------------------------
+
+------------------------------------JENKINS PIPELINE--------------------------------
++ Install Plugin
+           docker
+           docker-pipeline
+           Kubernetes Deploy plugin or Kubernetes Continuous Deploy Plugin
+           Kubernetes CLI Plugin
+
+
+       + Add credentials
+            manage Jenkins / Credentials / System / Global credentials
+            "Add aws credentials"
+            "add docker hub credentials"
+            "add github credentials"
+            "add Kubernetes credentials"
+                kind: kubernetes configuration or secret file
+
+                PS: Get cluster config content
+                sudo cat ~/.kube/config
+                or
+                sudo -u jenkins cat /var/lib/jenkins/.kube/config
+                    copy all of them and paste to kubernetes credentials
+
+                ID: K8S
+                description: "K8S"
+
+
+* Add credential in jenkins
+    manage jenkins > credentials > system > Global credentials
+    add aws credentials
+        kind: secrete text
+        scope: global
+        secret: AKIAQFHRPX45GU77Z2OU
+        ID: AWS_ACCESS_KEY_ID
+        -> Create
+    add aws credentials
+        kind: secrete text
+        scope: global
+        secret: yu3MB0pJCg7yj9T5/OI17fy2YRZl4inmpiIHgAof
+        ID: AWS_SECRET_ACCESS_KEY
+        -> Create
+
+* If git repo is private
+    Need to add crdentials also
+
+
+
+-----
+
+* Configure AWS credentials in Jenkins
+
+pipleline {
+    agent any
+    environment {
+        DOCKER_HUB_REPO       = "quanghongphuoc/depooptest"
+        KUBE_CONFIG           = "/home/jenkins/.kube/config"
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_REGION            = "us-west-2"
+        EKS_CLUSTER_NAME      = "depooptest-cluster"
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'github-credentials',
+                        url: 'https://github.com/PhuocQuang76/DepOopTest.git'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                   sh 'docker build -t $DOCKER_IMAGE:latest .'
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    echo "Pushing to Docker Hub..."
+                    withCredentials([usernamePassword(
+                        credentialsId: 'docker-hub-credentials',
+                        usernameVariable: 'DOCKER_HUB_USERNAME',
+                        passwordVariable: 'DOCKER_HUB_PASSWORD'
+                    )]) {
+                        sh """
+                            echo "Logging into Docker Hub..."
+                            echo \"$DOCKER_HUB_PASSWORD\" | docker login -u \"$DOCKER_HUB_USERNAME\" --password-stdin
+
+                            echo "Pushing images to Docker Hub..."
+                            docker push ${env.DOCKER_HUB_REPO}:latest
+
+                            echo "Images pushed successfully!"
+                        """
+                    }
+                }
+            }
+        }
+
+
+        stage('Deploy to EKS') {
+            steps {
+                script {
+                    sh """
+                        aws eks update-kubeconfig --region ${AWS_REGION}  --name ${EKS_CLUSTER_NAME}
+                        kubectl apply -f k8s-manifests/deployment.yaml
+                        kubectl apply -f k8s-manifests/service.yaml
+                    """
+                }
+            }
+        }
+    }
+}
+
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 --------------------------------------------------------------------

@@ -43,6 +43,13 @@ module "sg" {
       protocol    = "tcp"
       description = "SSH"
       cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      from_port   = 8088
+      to_port     = 8088
+      protocol    = "tcp"
+      description = "DpOopTest Application"
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
 
@@ -52,6 +59,7 @@ module "sg" {
       to_port     = 0
       protocol    = "-1"
       cidr_blocks = "0.0.0.0/0"
+      description = "Allow all outbound traffic"
     }
   ]
 
@@ -66,14 +74,15 @@ module "ec2_instance" {
 
   name = "Jenkins-Server"
 
+  ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   key_name                    = "my-key-pair"
   monitoring                  = true
   vpc_security_group_ids      = [module.sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
-  user_data                   = file("${path.module}/scripts/jenkins-install.sh")
   availability_zone           = data.aws_availability_zones.azs.names[0]
+
 
   tags = {
     Name        = "Jenkins-Server"
