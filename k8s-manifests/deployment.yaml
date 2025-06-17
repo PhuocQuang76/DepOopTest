@@ -1,4 +1,4 @@
-# k8s-manifests/all-in-one.yaml
+# k8s-manifests/deployment.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -9,22 +9,26 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: DepOopTest-deployment
+  name: depooptest-deployment  # Changed from DepOopTest-deployment to depooptest-deployment
   namespace: depooptest
   labels:
-    app: DepOopTest
+    app: depooptest
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: DepOopTest
+      app: depooptest
   template:
     metadata:
       labels:
-        app: DepOopTest
+        app: depooptest
     spec:
       containers:
         - name: depooptest
           image: quanghongphuoc/depooptest:latest
           ports:
             - containerPort: 8088
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
