@@ -1,3 +1,11 @@
+# k8s-manifests/all-in-one.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: depooptest
+  labels:
+    name: depooptest
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
