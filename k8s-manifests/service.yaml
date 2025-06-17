@@ -1,13 +1,16 @@
+# k8s-manifests/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: DepOopTest-svc
-  namespace: default
+  name: depooptest-service  # Changed from DepOopTest-svc to depooptest-service
+  namespace: depooptest
+  labels:
+    app: depooptest
 spec:
-  type: loadBalancer
+  type: LoadBalancer  # Changed from loadBalancer to LoadBalancer (case-sensitive)
   selector:
-    app: DepOopTest
+    app: depooptest  # Must match the label in the deployment
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8088 # Changed from 8080 to 8088 to match container port
+    - port: 80
+      targetPort: 8088
+      protocol: TCP
